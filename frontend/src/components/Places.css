@@ -1,0 +1,93 @@
+.places-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.empty-message {
+  text-align: center;
+  color: #999;
+  padding: 20px;
+  font-size: 14px;
+}
+
+.place-item {
+  padding: 12px;
+  background: #f5f5f5;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-left: 4px solid #667eea;
+}
+
+.place-item:hover {
+  background: #efefef;
+  transform: translateX(5px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.place-item-name {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.ai-badge {
+  margin-left: 8px;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: #111827;
+  color: white;
+  font-weight: 700;
+}
+
+.global-badge {
+  margin-left: 8px;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: #10b981;
+  color: white;
+  font-weight: 700;
+}
+
+.place-item-address {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 4px;
+}
+
+.place-item-category {
+  font-size: 12px;
+  color: #667eea;
+  font-weight: 500;
+}
+
+.place-item-rating {
+  font-size: 12px;
+  color: #ffc107;
+  margin-top: 4px;
+}
+
+.place-item-reason {
+  font-size: 11px;
+  color: #6b7280;
+  margin-top: 6px;
+}
+
+.delete-marker-btn {
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.delete-marker-btn:hover {
+  background: #da190b;
+}

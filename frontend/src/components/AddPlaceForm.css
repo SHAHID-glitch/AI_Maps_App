@@ -1,0 +1,46 @@
+.add-place-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.add-place-form input,
+.add-place-form select,
+.add-place-form textarea {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+.add-place-form input:focus,
+.add-place-form select:focus,
+.add-place-form textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
+}
+
+.add-place-form textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.submit-btn {
+  padding: 12px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.submit-btn:hover {
+  background: #5568d3;
+  transform: translateY(-2px);
+}
