@@ -58,27 +58,40 @@ router.get('/global', async (req, res) => {
       return res.status(400).json({ message: 'Search query required' });
     }
 
-    // Search in database
-    const dbResults = await Location.find({
-      $or: [
-        { name: { $regex: query, $options: 'i' } },
-        { address: { $regex: query, $options: 'i' } },
-        { description: { $regex: query, $options: 'i' } },
-      ],
-    }).limit(5);
+    let dbResults = [];
+    let geoResults = [];
 
-    // Search globally using Nominatim
-    const geoResponse = await axios.get('https://nominatim.openstreetmap.org/search', {
-      params: {
-        q: query,
-        format: 'json',
-        limit: 10,
-        addressdetails: 1,
-      },
-      headers: {
-        'User-Agent': 'MapsApp/1.0',
-      },
-    });
+    // Search in database (best-effort)
+    try {
+      dbResults = await Location.find({
+        $or: [
+          { name: { $regex: query, $options: 'i' } },
+          { address: { $regex: query, $options: 'i' } },
+          { description: { $regex: query, $options: 'i' } },
+        ],
+      }).limit(5);
+    } catch (dbError) {
+      console.warn('Global search DB fallback:', dbError.message);
+    }
+
+    // Search globally using Nominatim (best-effort)
+    try {
+      const geoResponse = await axios.get('https://nominatim.openstreetmap.org/search', {
+        params: {
+          q: query,
+          format: 'json',
+          limit: 10,
+          addressdetails: 1,
+        },
+        headers: {
+          'User-Agent': 'MapsApp/1.0',
+        },
+        timeout: 10000,
+      });
+      geoResults = Array.isArray(geoResponse.data) ? geoResponse.data : [];
+    } catch (geoError) {
+      console.warn('Global search geocoder fallback:', geoError.message);
+    }
 
     // Format database results
     const formattedDbResults = dbResults.map(loc => ({
@@ -93,7 +106,7 @@ router.get('/global', async (req, res) => {
     }));
 
     // Format global search results
-    const formattedGeoResults = geoResponse.data.map(place => ({
+    const formattedGeoResults = geoResults.map(place => ({
       source: 'global',
       name: place.display_name.split(',')[0],
       address: place.display_name,
@@ -110,7 +123,7 @@ router.get('/global', async (req, res) => {
     res.json(combinedResults);
   } catch (error) {
     console.error('Global search error:', error.message);
-    res.status(500).json({ message: error.message });
+    res.json([]);
   }
 });
 

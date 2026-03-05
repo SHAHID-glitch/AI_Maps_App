@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -29,9 +30,23 @@ app.use('/api/ai', require('./routes/ai'));
 app.use('/api/chat', require('./routes/chat'));
 app.use('/api/weather', require('./routes/weather'));
 
+// Serve React build output from backend/public
+const staticDir = path.join(__dirname, 'public');
+app.use(express.static(staticDir));
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'Backend running! 🚀', timestamp: new Date().toISOString() });
+});
+
+// Base route for App Service URL checks
+app.get('/', (req, res) => {
+  res.sendFile(path.join(staticDir, 'index.html'));
+});
+
+// SPA fallback for client-side routes (excluding API routes)
+app.get(/^\/(?!api\/).*/, (req, res) => {
+  res.sendFile(path.join(staticDir, 'index.html'));
 });
 
 // Error handling middleware
