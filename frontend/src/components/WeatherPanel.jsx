@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
 import './WeatherPanel.css';
 
 const WeatherPanel = ({ userLocation, weatherLocation, weatherEnabled, onClose }) => {
@@ -27,10 +28,10 @@ const WeatherPanel = ({ userLocation, weatherLocation, weatherEnabled, onClose }
     try {
       const [currentRes, forecastRes] = await Promise.all([
         fetch(
-          `http://localhost:5000/api/weather/current/${activeLocation.lat}/${activeLocation.lng}`
+          `${API_BASE_URL}/api/weather/current/${activeLocation.lat}/${activeLocation.lng}`
         ),
         fetch(
-          `http://localhost:5000/api/weather/forecast/${activeLocation.lat}/${activeLocation.lng}`
+          `${API_BASE_URL}/api/weather/forecast/${activeLocation.lat}/${activeLocation.lng}`
         ),
       ]);
 
@@ -50,7 +51,7 @@ const WeatherPanel = ({ userLocation, weatherLocation, weatherEnabled, onClose }
     if (!activeLocation) return;
     try {
       const forecastRes = await fetch(
-        `http://localhost:5000/api/weather/forecast/${activeLocation.lat}/${activeLocation.lng}`
+        `${API_BASE_URL}/api/weather/forecast/${activeLocation.lat}/${activeLocation.lng}`
       );
       const forecastData = await forecastRes.json();
       setForecast(forecastData);

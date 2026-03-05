@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { API_BASE_URL } from '../config'
 import './MarkerInfo.css'
 
 export default function MarkerInfo({
@@ -27,7 +28,7 @@ export default function MarkerInfo({
           destLng: marker.longitude,
         })
         const response = await fetch(
-          `http://localhost:5000/api/ai/travel-time?${params.toString()}`
+          `${API_BASE_URL}/api/ai/travel-time?${params.toString()}`
         )
         const data = await response.json()
         if (data?.etaMinutes) {

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { API_BASE_URL } from '../config'
 import './ChatWidget.css'
 
 const CHAT_HISTORY_KEY = 'maps_chat_history'
@@ -54,7 +55,7 @@ export default function ChatWidget({ userLocation, trafficEnabled, weatherEnable
     setIsLoading(true)
 
     try {
-      const response = await fetch('http://localhost:5000/api/chat', {
+      const response = await fetch(`${API_BASE_URL}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

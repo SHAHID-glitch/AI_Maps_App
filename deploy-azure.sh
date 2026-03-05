@@ -26,6 +26,11 @@ read -p "Enter backend app name (e.g., maps-backend-api): " BACKEND_NAME
 read -p "Enter frontend app name (e.g., maps-frontend): " FRONTEND_NAME
 read -p "Enter Azure region (e.g., eastus): " REGION
 read -p "Enter MongoDB connection string: " MONGODB_URI
+read -p "Enter allowed frontend origin(s), comma separated (e.g., https://nice-sky-12345.azurestaticapps.net): " ALLOWED_ORIGINS
+read -p "Enter OpenWeather API key (optional): " OPENWEATHER_API_KEY
+read -p "Enter GROQ API key (optional): " GROQ_API_KEY
+
+PLAN_NAME="${RESOURCE_GROUP}-plan"
 
 echo ""
 echo -e "${YELLOW}📝 Creating Azure resources...${NC}"
@@ -41,7 +46,7 @@ az group create --name $RESOURCE_GROUP --location $REGION
 # Create App Service Plan
 echo -e "${YELLOW}Creating App Service plan...${NC}"
 az appservice plan create \
-  --name maps-plan \
+  --name $PLAN_NAME \
   --resource-group $RESOURCE_GROUP \
   --sku B1 \
   --is-linux
@@ -50,7 +55,7 @@ az appservice plan create \
 echo -e "${YELLOW}Creating backend App Service...${NC}"
 az webapp create \
   --resource-group $RESOURCE_GROUP \
-  --plan maps-plan \
+  --plan $PLAN_NAME \
   --name $BACKEND_NAME \
   --runtime "node|18-lts"
 
@@ -63,6 +68,9 @@ az webapp config appsettings set \
     MONGODB_URI="$MONGODB_URI" \
     PORT=5000 \
     NODE_ENV=production \
+    ALLOWED_ORIGINS="$ALLOWED_ORIGINS" \
+    OPENWEATHER_API_KEY="$OPENWEATHER_API_KEY" \
+    GROQ_API_KEY="$GROQ_API_KEY" \
     WEBSITES_ENABLE_APP_SERVICE_STORAGE=false
 
 # Enable backend deployment from local git
@@ -85,10 +93,10 @@ echo "  2. git remote add azure https://<username>@$BACKEND_NAME.scm.azurewebsit
 echo "  3. git push azure main"
 echo ""
 echo -e "${YELLOW}Get your Azure deployment credentials:${NC}"
-echo "  az deployment show --resource-group $RESOURCE_GROUP --name $BACKEND_NAME"
+echo "  az webapp deployment list-publishing-credentials --resource-group $RESOURCE_GROUP --name $BACKEND_NAME"
 echo ""
 echo -e "${YELLOW}Next steps:${NC}"
-echo "  1. Set VITE_API_URL to 'https://$BACKEND_NAME.azurewebsites.net' in your frontend config"
+echo "  1. Set VITE_API_BASE_URL to 'https://$BACKEND_NAME.azurewebsites.net' in your frontend build"
 echo "  2. Deploy frontend to Azure Static Web Apps via GitHub"
 echo "  3. Update your backend CORS configuration with your Static Web Apps URL"
 echo ""

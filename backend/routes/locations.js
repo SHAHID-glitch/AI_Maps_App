@@ -1,10 +1,15 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const Location = require('../models/Location');
 
 // Get all locations
 router.get('/', async (req, res) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.json([]);
+    }
+
     const locations = await Location.find();
     res.json(locations);
   } catch (error) {
@@ -15,6 +20,10 @@ router.get('/', async (req, res) => {
 // Get nearby locations (MUST be before /:id route)
 router.get('/nearby/:lat/:lng', async (req, res) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.json([]);
+    }
+
     const lat = parseFloat(req.params.lat);
     const lng = parseFloat(req.params.lng);
     const radius = parseFloat(req.query.radius) || 5; // km

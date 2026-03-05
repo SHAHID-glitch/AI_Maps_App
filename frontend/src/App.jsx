@@ -3,6 +3,7 @@ import MapContainer from './components/MapContainer'
 import Sidebar from './components/Sidebar'
 import ChatWidget from './components/ChatWidget'
 import WeatherPanel from './components/WeatherPanel'
+import { API_BASE_URL } from './config'
 import './App.css'
 
 function App() {
@@ -47,17 +48,25 @@ function App() {
 
   const fetchAllLocations = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/locations')
+      const response = await fetch(`${API_BASE_URL}/api/locations`)
       const data = await response.json()
-      setAllLocations(data)
+
+      if (!response.ok) {
+        console.error('Failed to fetch locations:', data)
+        setAllLocations([])
+        return
+      }
+
+      setAllLocations(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('Error fetching locations:', error)
+      setAllLocations([])
     }
   }
 
   const handleAddPlace = async (placeData) => {
     try {
-      const response = await fetch('http://localhost:5000/api/locations', {
+      const response = await fetch(`${API_BASE_URL}/api/locations`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(placeData),
@@ -75,7 +84,7 @@ function App() {
     if (!confirm('Are you sure?')) return
 
     try {
-      await fetch(`http://localhost:5000/api/locations/${locationId}`, {
+      await fetch(`${API_BASE_URL}/api/locations/${locationId}`, {
         method: 'DELETE',
       })
       setAllLocations(allLocations.filter((loc) => loc._id !== locationId))
@@ -94,7 +103,7 @@ function App() {
         radius: 5,
       })
       const response = await fetch(
-        `http://localhost:5000/api/ai/traffic?${params.toString()}`
+        `${API_BASE_URL}/api/ai/traffic?${params.toString()}`
       )
       const data = await response.json()
       setTrafficPoints(Array.isArray(data?.points) ? data.points : [])
@@ -115,7 +124,7 @@ function App() {
         destLng: destination.longitude,
       })
       const response = await fetch(
-        `http://localhost:5000/api/ai/route?${params.toString()}`
+        `${API_BASE_URL}/api/ai/route?${params.toString()}`
       )
       const data = await response.json()
       if (Array.isArray(data?.path)) {

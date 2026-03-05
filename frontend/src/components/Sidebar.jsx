@@ -4,6 +4,7 @@ import NearbyPlaces from './NearbyPlaces'
 import SavedPlaces from './SavedPlaces'
 import AddPlaceForm from './AddPlaceForm'
 import MarkerInfo from './MarkerInfo'
+import { API_BASE_URL } from '../config'
 import './Sidebar.css'
 
 export default function Sidebar({
@@ -43,7 +44,7 @@ export default function Sidebar({
     setIsWeatherSearching(true)
     try {
       const response = await fetch(
-        `http://localhost:5000/api/weather/city/${encodeURIComponent(cityName)}`
+        `${API_BASE_URL}/api/weather/city/${encodeURIComponent(cityName)}`
       )
       if (response.ok) {
         const data = await response.json()
@@ -74,7 +75,7 @@ export default function Sidebar({
     setIsSearching(true)
     try {
       const response = await fetch(
-        `http://localhost:5000/api/search/global?q=${encodeURIComponent(query)}`
+        `${API_BASE_URL}/api/search/global?q=${encodeURIComponent(query)}`
       )
       const data = await response.json()
       const results = Array.isArray(data) ? data : []
