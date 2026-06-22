@@ -333,14 +333,6 @@ Want to contribute? Check the [issues](https://github.com/yourusername/maps) pag
 
 MIT License - Feel free to use this project for learning!
 
-## 🔥 Resume Impact
-
-**Before:** "Built a maps application"
-
-**After:** "Developed a full-stack geospatial web application with real-time location tracking, OpenStreetMap integration, and MongoDB database. Implemented RESTful APIs with Node.js/Express, interactive map features with Leaflet.js, and responsive UI with 50+ km search radius capability."
-
----
-
 ## 📞 Support
 
 Have questions? 
